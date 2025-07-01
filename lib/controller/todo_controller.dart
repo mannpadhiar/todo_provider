@@ -25,4 +25,9 @@ class TodoController extends ChangeNotifier{
   void updateUser(){
 
   }
+
+  void changeIsCompleted(int index){
+    todos[index].isCompleted = !todos[index].isCompleted;
+    notifyListeners();
+  }
 }

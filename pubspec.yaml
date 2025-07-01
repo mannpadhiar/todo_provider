@@ -37,6 +37,9 @@ dependencies:
   provider:
   intl:
   flutter_slidable:
+  firebase_core:
+  firebase_auth:
+
 
 dev_dependencies:
   flutter_test:
