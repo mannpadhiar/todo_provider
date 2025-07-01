@@ -2,60 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../controller/priority_controller.dart';
 import '../controller/todo_controller.dart';
 import '../model/todo_model.dart';
 
 class AddTodoPage extends StatelessWidget {
   AddTodoPage({super.key});
 
-  String selected = '';
-
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dueDateController = TextEditingController();
-
-  Widget buildPriorityTile(String label, Color color) {
-    final isSelected = selected == label;
-
-    return Expanded(
-      child: InkWell(
-        // onTap: () => selectPriority(label),
-        borderRadius: BorderRadius.circular(16),
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 200),
-          margin: EdgeInsets.symmetric(horizontal: 6),
-          padding: EdgeInsets.symmetric(vertical: 20),
-          decoration: BoxDecoration(
-            color: isSelected ? color.withOpacity(0.15) : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isSelected ? color : Colors.grey.shade300,
-              width: 2,
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                label == 'High'
-                    ? Icons.local_fire_department
-                    : label == 'Medium'
-                    ? Icons.flash_on
-                    : Icons.nightlight_round,
-                color: color,
-              ),
-              SizedBox(height: 8),
-              Text(
-                label,
-                style: TextStyle(fontWeight: FontWeight.bold, color: color),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -107,13 +64,104 @@ class AddTodoPage extends StatelessWidget {
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 40),
-              child: Row(
-                children: [
-                  buildPriorityTile('High', Colors.red),
-                  buildPriorityTile('Medium', Colors.orange),
-                  buildPriorityTile('Low', Colors.blue),
-                ],
-              ),
+              child: Consumer<PriorityController>(
+                builder: (context, provider, child) => Row(
+                  children: [
+                    // High Priority Tile
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          provider.changePriority(TaskPriority.high);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 200),
+                          margin: EdgeInsets.symmetric(horizontal: 6),
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          decoration: BoxDecoration(
+                            color: provider.taskPriority == TaskPriority.high ? Colors.red.withOpacity(0.15) : Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: provider.taskPriority == TaskPriority.high ? Colors.red : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.local_fire_department, color: Colors.red),
+                              SizedBox(height: 8),
+                              Text('High', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Medium Priority Tile
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          provider.changePriority(TaskPriority.medium);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 200),
+                          margin: EdgeInsets.symmetric(horizontal: 6),
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          decoration: BoxDecoration(
+                            color: provider.taskPriority == TaskPriority.medium ? Colors.orange.withOpacity(0.15) : Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: provider.taskPriority == TaskPriority.medium ? Colors.orange : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.flash_on, color: Colors.orange),
+                              SizedBox(height: 8),
+                              Text('Medium', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Low Priority Tile
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          provider.changePriority(TaskPriority.low);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 200),
+                          margin: EdgeInsets.symmetric(horizontal: 6),
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          decoration: BoxDecoration(
+                            color: provider.taskPriority == TaskPriority.low ? Colors.blue.withOpacity(0.15) : Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: provider.taskPriority == TaskPriority.low ? Colors.blue : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.nightlight_round, color: Colors.blue),
+                              SizedBox(height: 8),
+                              Text('Low', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ),
           ),
 
