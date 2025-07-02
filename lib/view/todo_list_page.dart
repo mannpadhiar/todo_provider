@@ -74,29 +74,34 @@ class TodoListPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OutlinedButton.icon(
-                    icon: Icon(Icons.edit, color: Colors.indigo),
-                    label: Text("Edit", style: TextStyle(color: Colors.indigo)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      showEditTaskDialog(context,provider.todos[index],index,provider);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.indigo),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: Icon(Icons.edit, color: Colors.white),
+                      label: Text("Edit", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        showEditTaskDialog(context,provider.todos[index],index,provider);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.close),
-                    label: Text("Close"),
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[200],
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: Icon(Icons.close),
+                      label: Text("Close"),
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -186,13 +191,49 @@ class TodoListPage extends StatelessWidget {
     }
   }
 
+  Widget buildEmptyTodoMessage() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.playlist_add_check_circle_outlined,
+              size: 80,
+              color: Colors.indigo.withOpacity(0.6),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No Tasks Yet!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Tap the + button to add your first todo.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: Consumer<TodoController>(
-            builder: (context, provider, child) => ListView.builder(
+            builder: (context, provider, child) => provider.todos.isEmpty?buildEmptyTodoMessage() : ListView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: provider.todos.length,
               itemBuilder: (context, index) {
@@ -285,7 +326,7 @@ class TodoListPage extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
     final TextEditingController titleController = TextEditingController(text: todo.title);
     final TextEditingController descController = TextEditingController(text: todo.description ?? '');
-    // DateTime selectedDate = DateTime.parse(todo.dueDate);
+    DateTime selectedDate = DateTime.tryParse(todo.dueDate) ?? DateTime.now();
     TaskPriority selectedPriority = todo.priority;
 
     showDialog(
@@ -319,48 +360,48 @@ class TodoListPage extends StatelessWidget {
                     maxLines: 3,
                   ),
                   SizedBox(height: 12),
-                  // InkWell(
-                  //   onTap: () async {
-                  //     DateTime? picked = await showDatePicker(
-                  //       context: context,
-                  //       initialDate: selectedDate,
-                  //       firstDate: DateTime(2020),
-                  //       lastDate: DateTime(2100),
-                  //     );
-                  //     if (picked != null) {
-                  //       selectedDate = picked;
-                  //     }
-                  //   },
-                  //   child: Container(
-                  //     width: double.infinity,
-                  //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  //     decoration: BoxDecoration(
-                  //       border: Border.all(color: Colors.grey),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //     child: Text(
-                  //       "Due Date: ${selectedDate.toIso8601String().substring(0, 10)}",
-                  //       style: TextStyle(color: Colors.black87),
-                  //     ),
-                  //   ),
-                  // ),
+                  InkWell(
+                    onTap: () async {
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        selectedDate = picked;
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "Due Date: ${selectedDate.toIso8601String().substring(0, 10)}",
+                        style: TextStyle(color: Colors.black87),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 12),
-                  // DropdownButtonFormField<Priority>(
-                  //   value: selectedPriority,
-                  //   decoration: InputDecoration(
-                  //     labelText: 'Priority',
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  //   items: TaskPriority.values.map((Priority priority) {
-                  //     return DropdownMenuItem<Priority>(
-                  //       value: priority,
-                  //       child: Text(priority.name.toUpperCase()),
-                  //     );
-                  //   }).toList(),
-                  //   onChanged: (Priority? value) {
-                  //     if (value != null) selectedPriority = value;
-                  //   },
-                  // ),
+                  DropdownButtonFormField<TaskPriority>(
+                    value: selectedPriority,
+                    decoration: InputDecoration(
+                      labelText: 'Priority',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: TaskPriority.values.map((priority) {
+                      return DropdownMenuItem(
+                        value: priority,
+                        child: Text(priority.name.toUpperCase()),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) selectedPriority = value;
+                    },
+                  ),
                 ],
               ),
             ),
@@ -373,14 +414,16 @@ class TodoListPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  // provider.updateTask(
-                  //   index,
-                  //   titleController.text.trim(),
-                  //   descController.text.trim(),
-                  //   selectedDate.toIso8601String(),
-                  //   selectedPriority,
-                  // );
-                  // Navigator.pop(context);
+                  provider.updateUser(
+                    todo,
+                    TodoModel(
+                      title: titleController.text.trim(),
+                      description: descController.text.trim(),
+                      dueDate: selectedDate.toIso8601String().substring(0, 10), // Save as string
+                      priority: selectedPriority,
+                    ),
+                  );
+                  Navigator.pop(context);
                 }
               },
               child: Text("Save"),
@@ -390,5 +433,6 @@ class TodoListPage extends StatelessWidget {
       },
     );
   }
+
 
 }

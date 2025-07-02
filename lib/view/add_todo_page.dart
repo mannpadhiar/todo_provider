@@ -17,19 +17,8 @@ class AddTodoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: Offset(0, 10),
-            ),
-          ],
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -44,7 +33,7 @@ class AddTodoPage extends StatelessWidget {
                 validator: (value) => value == null || value.trim().isEmpty ? 'Title is required' : null,
               ),
               SizedBox(height: 20),
-      
+
               // Description Field
               _buildInputField(
                 controller: _descriptionController,
@@ -54,7 +43,7 @@ class AddTodoPage extends StatelessWidget {
                 maxLines: 3,
               ),
               SizedBox(height: 20),
-      
+
               // Due Date Field
               _buildInputField(
                 controller: _dueDateController,
@@ -90,7 +79,7 @@ class AddTodoPage extends StatelessWidget {
                 },
               ),
               SizedBox(height: 32),
-      
+
               // Priority Section
               Text(
                 "Priority Level",
@@ -108,7 +97,7 @@ class AddTodoPage extends StatelessWidget {
                     final color = getPriorityColor(priority);
                     final icon = getPriorityIcon(priority);
                     final label = getPriorityLabel(priority);
-      
+
                     return Expanded(
                       child: GestureDetector(
                         onTap: () => provider.changePriority(priority),
@@ -176,7 +165,7 @@ class AddTodoPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 40),
-      
+
               // Add Button
               Consumer<PriorityController>(
                 builder: (context, provider, child) => Container(

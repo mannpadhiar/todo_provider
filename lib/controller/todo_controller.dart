@@ -3,12 +3,7 @@ import 'package:todo_provider/model/todo_model.dart';
 
 class TodoController extends ChangeNotifier{
   List<TodoModel> todos = [
-    TodoModel(
-      title: 'Schedule dentist appointment',
-      description: 'Call and schedule the appointment at 10 AM.',
-      dueDate: '01-07-2025',
-      priority: TaskPriority.high,
-    ),
+
   ];
 
   void addUser(TodoModel todo){
@@ -22,8 +17,10 @@ class TodoController extends ChangeNotifier{
     print('user deleted');
   }
 
-  void updateUser(){
-
+  void updateUser(TodoModel oldTodo,TodoModel newTodo){
+    int index = todos.indexOf(oldTodo);
+    todos[index] = newTodo;
+    notifyListeners();
   }
 
   void changeIsCompleted(int index){

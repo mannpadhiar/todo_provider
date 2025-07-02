@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_provider/view/add_todo_page.dart';
 import 'package:todo_provider/view/todo_list_page.dart';
 
@@ -31,22 +32,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         flexibleSpace: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadiusGeometry.only(bottomRight: Radius.circular(20),bottomLeft: Radius.circular(20)),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF7C3AED), // Medium purple
-                Color(0xFF6D28D9), // Darker purple
-              ],
-            ),
+            color: Colors.indigoAccent
           ),
           child: SafeArea(
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         padding: EdgeInsets.all(8),
@@ -74,7 +70,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 hintText: 'Search tasks...',
                                 hintStyle: TextStyle(
                                   color: Colors.grey.shade600,
-                                  fontSize: 14,
+                                  fontSize: 15,
                                 ),
                                 prefixIcon: Icon(
                                   Icons.search,
@@ -97,7 +93,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Today, 1 May',
+                            DateFormat('dd MMMM').format(DateTime.now()),
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.8),
                               fontSize: 14,
